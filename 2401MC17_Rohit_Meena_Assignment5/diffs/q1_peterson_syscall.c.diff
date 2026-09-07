@@ -1,0 +1,28 @@
+--- xv6-pristine/syscall.c
++++ xv6-assignment5/syscall.c
+@@ -103,6 +103,11 @@
+ extern int sys_wait(void);
+ extern int sys_write(void);
+ extern int sys_uptime(void);
++extern int sys_shmget(void);
++extern int sys_sem_init(void);
++extern int sys_sem_wait(void);
++extern int sys_sem_post(void);
++extern int sys_sem_destroy(void);
+ 
+ static int (*syscalls[])(void) = {
+ [SYS_fork]    sys_fork,
+@@ -125,7 +130,12 @@
+ [SYS_unlink]  sys_unlink,
+ [SYS_link]    sys_link,
+ [SYS_mkdir]   sys_mkdir,
+-[SYS_close]   sys_close,
++[SYS_close]    sys_close,
++[SYS_shmget]   sys_shmget,
++[SYS_sem_init] sys_sem_init,
++[SYS_sem_wait] sys_sem_wait,
++[SYS_sem_post] sys_sem_post,
++[SYS_sem_destroy] sys_sem_destroy,
+ };
+ 
+ void

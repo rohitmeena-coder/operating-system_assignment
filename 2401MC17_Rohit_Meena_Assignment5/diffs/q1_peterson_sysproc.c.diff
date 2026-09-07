@@ -1,0 +1,48 @@
+--- xv6-pristine/sysproc.c
++++ xv6-assignment5/sysproc.c
+@@ -89,3 +89,45 @@
+   release(&tickslock);
+   return xticks;
+ }
++
++int
++sys_shmget(void)
++{
++  return shm_attach();
++}
++
++int
++sys_sem_init(void)
++{
++  int id, value;
++  if(argint(0, &id) < 0 || argint(1, &value) < 0)
++    return -1;
++  return seminit(id, value);
++}
++
++int
++sys_sem_wait(void)
++{
++  int id;
++  if(argint(0, &id) < 0)
++    return -1;
++  return semwait(id);
++}
++
++int
++sys_sem_post(void)
++{
++  int id;
++  if(argint(0, &id) < 0)
++    return -1;
++  return sempost(id);
++}
++
++int
++sys_sem_destroy(void)
++{
++  int id;
++  if(argint(0, &id) < 0)
++    return -1;
++  return semdestroy(id);
++}

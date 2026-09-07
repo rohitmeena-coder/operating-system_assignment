@@ -1,0 +1,121 @@
+--- /dev/null
++++ xv6-assignment5/readwrite.c
+@@ -0,0 +1,118 @@
++#include "types.h"
++#include "stat.h"
++#include "user.h"
++
++#define RLOCK 3
++#define TURNSTILE 4
++#define RESOURCE 5
++#define READERS 3
++#define WRITERS 2
++#define ROUNDS 4
++
++struct rw_state {
++  int shared_data;
++  int read_count;
++  int active_readers;
++  int active_writers;
++  int violation;
++};
++
++static void
++pause_work(void)
++{
++  volatile int i;
++  for(i = 0; i < 90000; i++)
++    ;
++}
++
++static void
++reader(struct rw_state *s, int id)
++{
++  int i;
++  for(i = 0; i < ROUNDS; i++){
++    sem_wait(TURNSTILE);
++    sem_post(TURNSTILE);
++    sem_wait(RLOCK);
++    s->read_count++;
++    if(s->read_count == 1)
++      sem_wait(RESOURCE);
++    s->active_readers++;
++    sem_post(RLOCK);
++
++    if(s->active_writers != 0)
++      s->violation = 1;
++    printf(1, "Reader %d: READ shared_data=%d active_readers=%d\n",
++           id, s->shared_data, s->active_readers);
++    pause_work();
++
++    sem_wait(RLOCK);
++    s->active_readers--;
++    s->read_count--;
++    if(s->read_count == 0)
++      sem_post(RESOURCE);
++    sem_post(RLOCK);
++    pause_work();
++  }
++}
++
++static void
++writer(struct rw_state *s, int id)
++{
++  int i;
++  for(i = 0; i < ROUNDS; i++){
++    sem_wait(TURNSTILE);
++    sem_wait(RESOURCE);
++    sem_post(TURNSTILE);
++
++    if(s->active_readers != 0 || s->active_writers != 0)
++      s->violation = 1;
++    s->active_writers = 1;
++    s->shared_data++;
++    printf(1, "Writer %d: WRITE shared_data=%d\n", id, s->shared_data);
++    pause_work();
++    s->active_writers = 0;
++    sem_post(RESOURCE);
++    pause_work();
++  }
++}
++
++int
++main(void)
++{
++  struct rw_state *s = (struct rw_state*)shmget();
++  int pid, i;
++
++  if((uint)s == (uint)-1){
++    printf(1, "readwrite: shmget failed\n");
++    exit();
++  }
++  s->shared_data = 0;
++  s->read_count = s->active_readers = s->active_writers = 0;
++  s->violation = 0;
++  sem_init(RLOCK, 1);
++  sem_init(TURNSTILE, 1);
++  sem_init(RESOURCE, 1);
++
++  for(i = 0; i < READERS + WRITERS; i++){
++    pid = fork();
++    if(pid == 0){
++      shmget();
++      if(i < READERS)
++        reader(s, i);
++      else
++        writer(s, i - READERS);
++      exit();
++    }
++  }
++  for(i = 0; i < READERS + WRITERS; i++)
++    wait();
++
++  printf(1, "Readers-writers final data=%d (expected %d)\n",
++         s->shared_data, WRITERS * ROUNDS);
++  printf(1, "Readers-writers violations=%d\n", s->violation);
++  if(s->shared_data == WRITERS * ROUNDS && s->violation == 0)
++    printf(1, "READWRITE PASS\n");
++  else
++    printf(1, "READWRITE FAIL\n");
++  exit();
++}

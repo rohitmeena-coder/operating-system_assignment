@@ -1,0 +1,116 @@
+--- /dev/null
++++ xv6-assignment5/sync.c
+@@ -0,0 +1,113 @@
++#include "types.h"
++#include "defs.h"
++#include "param.h"
++#include "memlayout.h"
++#include "mmu.h"
++#include "proc.h"
++#include "spinlock.h"
++
++#define NSEMS 32
++
++struct semaphore {
++  int used;
++  int value;
++};
++
++static struct spinlock sync_lock;
++static struct semaphore sems[NSEMS];
++static char *shared_page;
++
++void
++syncinit(void)
++{
++  initlock(&sync_lock, "sync");
++  memset(sems, 0, sizeof(sems));
++  shared_page = 0;
++}
++
++// Allocate one page once, then map it into each caller at SHMBASE.
++// It is kernel-owned and therefore is not copied by fork().
++int
++shm_attach(void)
++{
++  struct proc *p = myproc();
++  int result;
++
++  acquire(&sync_lock);
++  if(shared_page == 0){
++    shared_page = kalloc();
++    if(shared_page == 0){
++      release(&sync_lock);
++      return -1;
++    }
++    memset(shared_page, 0, PGSIZE);
++  }
++  result = map_shared_page(p->pgdir, V2P(shared_page));
++  release(&sync_lock);
++  if(result < 0)
++    return -1;
++  return SHMBASE;
++}
++
++int
++seminit(int id, int value)
++{
++  if(id < 0 || id >= NSEMS || value < 0)
++    return -1;
++  acquire(&sync_lock);
++  sems[id].used = 1;
++  sems[id].value = value;
++  release(&sync_lock);
++  return 0;
++}
++
++int
++semwait(int id)
++{
++  if(id < 0 || id >= NSEMS)
++    return -1;
++  acquire(&sync_lock);
++  if(!sems[id].used){
++    release(&sync_lock);
++    return -1;
++  }
++  while(sems[id].value == 0){
++    if(myproc()->killed){
++      release(&sync_lock);
++      return -1;
++    }
++    sleep(&sems[id], &sync_lock);
++  }
++  sems[id].value--;
++  release(&sync_lock);
++  return 0;
++}
++
++int
++sempost(int id)
++{
++  if(id < 0 || id >= NSEMS)
++    return -1;
++  acquire(&sync_lock);
++  if(!sems[id].used){
++    release(&sync_lock);
++    return -1;
++  }
++  sems[id].value++;
++  wakeup(&sems[id]);
++  release(&sync_lock);
++  return 0;
++}
++
++int
++semdestroy(int id)
++{
++  if(id < 0 || id >= NSEMS)
++    return -1;
++  acquire(&sync_lock);
++  sems[id].used = 0;
++  sems[id].value = 0;
++  wakeup(&sems[id]);
++  release(&sync_lock);
++  return 0;
++}

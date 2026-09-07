@@ -1,0 +1,10 @@
+--- xv6-pristine/main.c
++++ xv6-assignment5/main.c
+@@ -27,6 +27,7 @@
+   consoleinit();   // console hardware
+   uartinit();      // serial port
+   pinit();         // process table
++  syncinit();      // shared memory and semaphore tables
+   tvinit();        // trap vectors
+   binit();         // buffer cache
+   fileinit();      // file table

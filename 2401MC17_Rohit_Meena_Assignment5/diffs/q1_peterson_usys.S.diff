@@ -1,0 +1,11 @@
+--- xv6-pristine/usys.S
++++ xv6-assignment5/usys.S
+@@ -29,3 +29,8 @@
+ SYSCALL(sbrk)
+ SYSCALL(sleep)
+ SYSCALL(uptime)
++SYSCALL(shmget)
++SYSCALL(sem_init)
++SYSCALL(sem_wait)
++SYSCALL(sem_post)
++SYSCALL(sem_destroy)
