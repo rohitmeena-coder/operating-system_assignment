@@ -1,0 +1,15 @@
+ro_bad
+sb: size 1000 nblocks 941 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 58
+init: starting sh
+$ [t=5] Process A: waiting for Lock1
+[t=6] Process A: acquired Lock1
+[t=6] Process B: waiting for Lock2
+[t=7] Process B: acquired Lock2
+[t=11] Process A: waiting for Lock2
+[t=12] Process B: waiting for Lock1
+
+--- No further output ever appears after this point. ---
+--- Process A holds Lock1 and blocks on Lock2 (held by B);
+--- Process B holds Lock2 and blocks on Lock1 (held by A): classic circular wait.
+--- Run was terminated from the host with a 15s timeout / QEMU monitor kill
+--- (equivalent to Ctrl-a x) since the shell prompt never returns -- this IS the deadlock.

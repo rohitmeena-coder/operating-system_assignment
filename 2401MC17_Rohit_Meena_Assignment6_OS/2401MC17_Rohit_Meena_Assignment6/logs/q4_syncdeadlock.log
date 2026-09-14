@@ -1,0 +1,124 @@
+$ syncdeadlock
+P0: requesting printer (cycle 1)
+P0: granted printer
+P0: requesting scanner (cycle 1)
+P0: granted scanner
+P0: working with printer + scanner
+P2: requesting printer (cycle 1)
+P2: granted printer
+P2: requesting disk (cycle 1)
+P2: granted disk
+P2: working with printer + disk
+P3: requesting printer (cycle 1)
+P4: requesting scanner (cycle 1)
+P4: granted scanner
+P4: requesting disk (cycle 1)
+P4: granted disk
+P4: working with scanner + disk
+P0: released printer + scanner
+P0: requesting printer (cycle 2)
+P0: granted printer
+P0: requesting scanner (cycle 2)
+P0: granted scanner
+P0: working with printer + scanner
+P1: requesting scanner (cycle 1)
+P2: released printer + disk
+P2: requesting printer (cycle 2)
+P3: granted printer
+P3: requesting scanner (cycle 1)
+P4: released scanner + disk
+P4: requesting scanner (cycle 2)
+P0: released printer + scanner
+P0: requesting printer (cycle 3)
+P1: granted scanner
+P1: requesting disk (cycle 1)
+P1: granted disk
+P1: working with scanner + disk
+P2: granted printer
+P2: requesting disk (cycle 2)
+P2: granted disk
+P2: working with printer + disk
+P3: granted scanner
+P3: working with printer + scanner
+P1: released scanner + disk
+P1: requesting scanner (cycle 2)
+P2: released printer + disk
+P2: requesting printer (cycle 3)
+P0: granted printer
+P0: requesting scanner (cycle 3)
+P2: granted printer
+P2: requesting disk (cycle 3)
+P2: granted disk
+P2: working with printer + disk
+P3: released printer + scanner
+P3: requesting printer (cycle 2)
+P4: granted scanner
+P4: requesting disk (cycle 2)
+P4: granted disk
+P4: working with scanner + disk
+P2: released printer + disk
+P2: requesting printer (cycle 4)
+P3: granted printer
+P3: requesting scanner (cycle 2)
+P4: released scanner + disk
+P4: requesting scanner (cycle 3)
+P0: granted scanner
+P0: working with printer + scanner
+P0: released printer + scanner
+P0: requesting printer (cycle 4)
+P0: granted printer
+P0: requesting scanner (cycle 4)
+P1: granted scanner
+P1: requesting disk (cycle 2)
+P1: granted disk
+P1: working with scanner + disk
+P1: released scanner + disk
+P1: requesting scanner (cycle 3)
+P1: granted scanner
+P1: requesting disk (cycle 3)
+P1: granted disk
+P1: working with scanner + disk
+P1: released scanner + disk
+P1: requesting scanner (cycle 4)
+P1: granted scanner
+P1: requesting disk (cycle 4)
+P1: granted disk
+P1: working with scanner + disk
+P1: released scanner + disk
+P3: granted scanner
+P3: working with printer + scanner
+P3: released printer + scanner
+P3: requesting printer (cycle 3)
+P3: granted printer
+P3: requesting scanner (cycle 3)
+P4: granted scanner
+P4: requesting disk (cycle 3)
+P4: granted disk
+P4: working with scanner + disk
+P4: released scanner + disk
+P4: requesting scanner (cycle 4)
+P0: granted scanner
+P0: working with printer + scanner
+P0: released printer + scanner
+P2: granted printer
+P2: requesting disk (cycle 4)
+P2: granted disk
+P2: working with printer + disk
+P3: granted scanner
+P3: working with printer + scanner
+P2: released printer + disk
+P3: released printer + scanner
+P3: requesting printer (cycle 4)
+P3: granted printer
+P3: requesting scanner (cycle 4)
+P4: granted scanner
+P4: requesting disk (cycle 4)
+P4: granted disk
+P4: working with scanner + disk
+P4: released scanner + disk
+P3: granted scanner
+P3: working with printer + scanner
+P3: released printer + scanner
+
+Completion counts: P0=4 P1=4 P2=4 P3=4 P4=4
+SYNCDEADLOCK PASS: all processes finished, no resource overrun, no deadlock

@@ -1,0 +1,39 @@
+$ bankers
+Initial state:
+Proc  Allocation      Max             Need            
+P0    0 1 0       7 5 3       7 4 3 
+P1    2 0 0       3 2 2       1 2 2 
+P2    3 0 2       9 0 2       6 0 0 
+P3    2 1 1       2 2 2       0 1 1 
+P4    0 0 2       4 3 3       4 3 1 
+Available: 3 3 2
+
+System is in a SAFE state.
+Safe sequence: P1 P3 P4 P0 P2 
+
+Request from P1: 1 0 2
+Request granted -- system remains safe
+Safe sequence: P1 P3 P4 P0 P2 
+
+State after P1 request:
+Proc  Allocation      Max             Need            
+P0    0 1 0       7 5 3       7 4 3 
+P1    3 0 2       3 2 2       0 2 0 
+P2    3 0 2       9 0 2       6 0 0 
+P3    2 1 1       2 2 2       0 1 1 
+P4    0 0 2       4 3 3       4 3 1 
+Available: 2 3 0
+
+Request from P0: 0 2 0
+Request denied -- would lead to unsafe state
+
+State after P0 request:
+Proc  Allocation      Max             Need            
+P0    0 1 0       7 5 3       7 4 3 
+P1    3 0 2       3 2 2       0 2 0 
+P2    3 0 2       9 0 2       6 0 0 
+P3    2 1 1       2 2 2       0 1 1 
+P4    0 0 2       4 3 3       4 3 1 
+Available: 2 3 0
+
+BANKERS DONE

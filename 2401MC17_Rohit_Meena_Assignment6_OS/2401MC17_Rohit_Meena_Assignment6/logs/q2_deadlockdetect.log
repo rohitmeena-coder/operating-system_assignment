@@ -1,0 +1,18 @@
+$ deadlockdetect
+== Scenario 1: acyclic wait-for graph ==
+Wait-for graph edges:
+  P1 -> P0
+  P3 -> P1
+
+No deadlock -- wait-for graph is acyclic.
+
+== Scenario 2: 3-process circular wait ==
+Wait-for graph edges:
+  P0 -> P1
+  P1 -> P2
+  P2 -> P0
+  P3 -> P0
+
+DEADLOCK DETECTED -- cycle: P0 -> P1 -> P2 -> P0
+
+DEADLOCKDETECT DONE

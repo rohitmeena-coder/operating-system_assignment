@@ -1,0 +1,14 @@
+--- Makefile	2026-09-08 17:55:39.304039512 +0000
++++ ../xv6/Makefile	2026-09-08 15:29:54.682366079 +0000
+@@ -186,6 +186,11 @@
+ 	_prodcons\
+ 	_readwrite\
+ 	_dining\
++	_bankers\
++	_deadlockdetect\
++	_ro_bad\
++	_ro_fixed\
++	_syncdeadlock\
+ 
+ fs.img: mkfs README $(UPROGS)
+ 	./mkfs fs.img README $(UPROGS)
