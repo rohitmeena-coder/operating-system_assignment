@@ -1,48 +1,99 @@
-xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
-Version 6 (v6).  xv6 loosely follows the structure and style of v6,
-but is implemented for a modern RISC-V multiprocessor using ANSI C.
 
-ACKNOWLEDGMENTS
+# xv6 Operating System — Lab Assignment 7
 
-xv6 is inspired by John Lions's Commentary on UNIX 6th Edition (Peer
-to Peer Communications; ISBN: 1-57398-013-7; 1st edition (June 14,
-2000)).  See also https://pdos.csail.mit.edu/6.1810/, which provides
-pointers to on-line resources for v6.
+## Introduction
 
-The following people have made contributions: Russ Cox (context switching,
-locking), Cliff Frey (MP), Xiao Yu (MP), Nickolai Zeldovich, and Austin
-Clements.
+xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix Version 6 (v6). It loosely follows the structure and style of v6, but is implemented in ANSI C for a modern RISC-V multiprocessor.
 
-We are also grateful for the bug reports and patches contributed by
-Abhinavpatel00, Takahiro Aoyagi, Marcelo Arroyo, Hirbod Behnam, Silas
-Boyd-Wickizer, Anton Burtsev, carlclone, Ian Chen, clivezeng, Dan
-Cross, Cody Cutler, Mike CAT, Tej Chajed, Asami Doi,Wenyang Duan,
-echtwerner, eyalz800, Nelson Elhage, Saar Ettinger, Alice Ferrazzi,
-Nathaniel Filardo, flespark, Peter Froehlich, Yakir Goaron, Shivam
-Handa, Matt Harvey, Bryan Henry, jaichenhengjie, Jim Huang, Matúš
-Jókay, John Jolly, Alexander Kapshuk, Anders Kaseorg, kehao95,
-Wolfgang Keller, Jungwoo Kim, Jonathan Kimmitt, Eddie Kohler, Vadim
-Kolontsov, Austin Liew, Bruce Lowekamp, l0stman, Pavan Maddamsetti,
-Imbar Marinescu, Yandong Mao, Matan Shabtay, Hitoshi Mitake, Carmi
-Merimovich, mes900903, Mark Morrissey, mtasm, Joel Nider, Hayato Ohhashi,
-OptimisticSide, papparapa, phosphagos, Harry Porter, Greg Price, Zheng
-qhuo, Quancheng, RayAndrew, Jude Rich, segfault, Ayan Shafqat, Eldar
-Sehayek, Yongming Shen, Fumiya Shigemitsu, snoire, Taojie, Cam Tenny,
-tyfkda, Warren Toomey, Stephen Tu, Alissa Tung, Rafael Ubal, unicornx,
-Amane Uehara, Pablo Ventura, Luc Videau, Xi Wang, WaheedHafez, Keiichi
-Watanabe, Lucas Wolf, Nicolas Wolovick, wxdao, Grant Wu, x653, Andy
-Zhang, Jindong Zhang, Icenowy Zheng, ZhUyU1997, and Zou Chang Wei.
+The main purpose of xv6 is educational: it provides a small, understandable operating system for learning operating-system concepts and kernel implementation.
 
-ERROR REPORTS
+## Acknowledgments
 
-Please send errors and suggestions to Frans Kaashoek and Robert Morris
-(kaashoek,rtm@mit.edu).  The main purpose of xv6 is as a teaching
-operating system for MIT's 6.1810, so we are more interested in
-simplifications and clarifications than new features.
+xv6 is inspired by John Lions's *Commentary on UNIX 6th Edition* (Peer to Peer Communications, ISBN: 1-57398-013-7, first edition June 14, 2000).
 
-BUILDING AND RUNNING XV6
+Online resources for the original v6 are available at:
+https://pdos.csail.mit.edu/6.1810/
 
-You will need a RISC-V "newlib" tool chain from
-https://github.com/riscv/riscv-gnu-toolchain, and qemu compiled for
-riscv64-softmmu.  Once they are installed, and in your shell
-search path, you can run "make qemu".
+Contributors include Russ Cox, Cliff Frey, Xiao Yu, Nickolai Zeldovich, Austin Clements, and many others who have contributed fixes, improvements, and bug reports.
+
+## Requirements
+
+To build and run xv6, you need:
+
+- A RISC-V GNU toolchain with newlib support:
+  https://github.com/riscv-collab/riscv-gnu-toolchain
+- QEMU compiled with RISC-V 64-bit system emulation (`riscv64-softmmu`)
+- `make`
+- A shell environment where the required tools are available in `PATH`
+
+## Building and Running xv6
+
+1. Install the RISC-V toolchain and QEMU for RISC-V.
+2. Make sure the compiler tools and QEMU are available in your shell's `PATH`.
+3. Open a terminal in the xv6 source directory.
+4. Run:
+
+   ```sh
+   make qemu
+   ```
+
+To exit QEMU, use the exit key sequence supported by your terminal/QEMU setup (commonly `Ctrl+A`, then `X`).
+
+## Assignment 7 Overview
+
+This assignment explores four operating-system topics.
+
+### Question 1 — Implementing Threads
+
+- Add a `clone()` system call to create a thread that shares the caller's address space.
+- Add a `join()` system call to wait for a thread and clean up its resources.
+- Update process structures and ensure `exit()`, `fork()`, and `wait()` handle threads correctly.
+- Create `threadtest.c` to run three threads that increment a shared counter 100,000 times each.
+
+**Expected result:** The shared counter demonstrates shared-address-space behavior. Without synchronization, race conditions may cause the final value to be less than 300,000.
+
+### Question 2 — Synchronization Using Semaphores
+
+- Implement kernel semaphores using xv6's `sleep()` and `wakeup()` mechanisms.
+- Add `sem_init()`, `sem_wait()`, and `sem_signal()` system calls.
+- Create `synctest.c` to protect the shared counter with a semaphore.
+- Implement the Producer–Consumer problem using a buffer of size 5 and `empty`, `full`, and `mutex` semaphores.
+
+**Expected result:** The synchronized counter reaches exactly 300,000, and the Producer–Consumer program avoids buffer overflow and underflow.
+
+### Question 3 — Deadlock Detection and Avoidance
+
+- Create `deadlock.c` to simulate processes and resource types using `Allocation`, `Request` or `Max`, and `Available` arrays.
+- Implement deadlock detection by repeatedly finding processes whose outstanding requests can be satisfied.
+- Test a circular-wait scenario using xv6 processes and pipes, where feasible.
+- Implement a safety check based on the Banker's Algorithm.
+
+**Expected result:** Test at least one deadlocked state, one safe state, and one state that becomes unsafe after a request. Print the resource state during the algorithm.
+
+### Question 4 — Priority-Based Preemptive Scheduling
+
+- Add a priority field to `struct proc`, using 1 as the highest priority and 20 as the lowest; initialize new processes to priority 10.
+- Add `set_priority(pid, priority)` and `get_priority(pid)` system calls.
+- Modify `scheduler()` to select the runnable process with the lowest priority number, breaking ties in round-robin order.
+- Implement aging: after a runnable process waits more than 30 ticks, improve its priority by decrementing its priority number and reset its wait counter.
+- Create `priotest.c` to compare completion behavior across processes with different priorities.
+
+**Expected result:** Higher-priority processes generally receive CPU time sooner, while aging helps prevent starvation of lower-priority processes.
+
+## Submission Checklist
+
+- [ ] Modified kernel source files, with comments
+- [ ] `threadtest.c`
+- [ ] `synctest.c`
+- [ ] `deadlock.c`
+- [ ] `priotest.c`
+- [ ] Terminal screenshots demonstrating each question's behavior
+- [ ] A consolidated 2–3 page report describing design decisions, data structures, issues and fixes, test results, and scheduling comparisons
+
+## Error Reports and Suggestions
+
+The original xv6 project requests reports of errors and suggestions to Frans Kaashoek and Robert Morris at `kaashoek,rtm@mit.edu`. The project's teaching focus means simplifications and clarifications are especially welcome.
+
+## Note
+
+This README describes the project and the assignment goals. Update it with the exact changes, commands, and results from your own implementation. Do not mark a task as completed until you have tested it.
