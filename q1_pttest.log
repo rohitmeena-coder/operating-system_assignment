@@ -1,0 +1,20 @@
+$ pttest
+ROHIT PTTEST: initial page table
+PDE[0] pt=0x80111000 flags=P1 W1 U0
+  va=0x0 pa=0x80112000 flags=P1 W0 U1
+  va=0x1000 pa=0x80113000 flags=P1 W0 U1
+  va=0x2000 pa=0x80114000 flags=P1 W1 U1
+VMPRINT totals: valid_user_pages=3 page_table_pages=1
+ROHIT PTTEST: initial valid user pages=3
+ROHIT PTTEST: after sbrk(4 * 4096)
+PDE[0] pt=0x80111000 flags=P1 W1 U0
+  va=0x0 pa=0x80112000 flags=P1 W0 U1
+  va=0x1000 pa=0x80113000 flags=P1 W0 U1
+  va=0x2000 pa=0x80114000 flags=P1 W1 U1
+  va=0x3000 pa=0x80115000 flags=P1 W1 U1
+  va=0x4000 pa=0x80116000 flags=P1 W1 U1
+  va=0x5000 pa=0x80117000 flags=P1 W1 U1
+  va=0x6000 pa=0x80118000 flags=P1 W1 U1
+VMPRINT totals: valid_user_pages=7 page_table_pages=1
+ROHIT PTTEST: new valid user pages=4 (expected 4)
+ROHIT PTTEST PASS
