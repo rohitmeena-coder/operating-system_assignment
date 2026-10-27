@@ -1,5 +1,0 @@
-$ faulttest
-ROHIT FAULTTEST: reserved=32 pages touched=5 faults=5 (expected 5)
-pid 4: invalid page fault va 0x00028000
-ROHIT FAULTTEST: invalid child terminated, parent alive, faults=5
-ROHIT FAULTTEST PASS
