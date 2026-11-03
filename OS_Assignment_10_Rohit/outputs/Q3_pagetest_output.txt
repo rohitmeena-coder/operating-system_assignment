@@ -1,0 +1,13 @@
+$ pagetest
+pagetest: allocated one page at va 0x3000
+pagetest: page info BEFORE setreadonly:
+pageinfo: va 0x3000 -> physical frame number 57131 (frame base 0xdf2b000)
+          flags: P(Present)=1  W(Writable)=1  U(User)=1
+pagetest: wrote 'A' to the page (write allowed)
+pagetest: page is now READ-ONLY
+pagetest: page info AFTER setreadonly:
+pageinfo: va 0x3000 -> physical frame number 57131 (frame base 0xdf2b000)
+          flags: P(Present)=1  W(Writable)=0  U(User)=1
+pagetest: attempting to write to the read-only page...
+pagetest: (a page fault should occur and xv6 will kill this process)
+pid 5 pagetest: trap 14 err 7 on cpu 0 eip 0xb3 addr 0x3000--kill proc

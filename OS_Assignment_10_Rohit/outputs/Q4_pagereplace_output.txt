@@ -1,0 +1,92 @@
+$ pagereplace
+pagereplace: page replacement algorithms
+Reference string (20 references): 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1
+
+--- FIFO with 3 frames ---
+  ref 7 : [ 7 - - ]  FAULT
+  ref 0 : [ 7 0 - ]  FAULT
+  ref 1 : [ 7 0 1 ]  FAULT
+  ref 2 : [ 2 0 1 ]  FAULT
+  ref 0 : [ 2 0 1 ]  HIT
+  ref 3 : [ 2 3 1 ]  FAULT
+  ref 0 : [ 2 3 0 ]  FAULT
+  ref 4 : [ 4 3 0 ]  FAULT
+  ref 2 : [ 4 2 0 ]  FAULT
+  ref 3 : [ 4 2 3 ]  FAULT
+  ref 0 : [ 0 2 3 ]  FAULT
+  ref 3 : [ 0 2 3 ]  HIT
+  ref 2 : [ 0 2 3 ]  HIT
+  ref 1 : [ 0 1 3 ]  FAULT
+  ref 2 : [ 0 1 2 ]  FAULT
+  ref 0 : [ 0 1 2 ]  HIT
+  ref 1 : [ 0 1 2 ]  HIT
+  ref 7 : [ 7 1 2 ]  FAULT
+  ref 0 : [ 7 0 2 ]  FAULT
+  ref 1 : [ 7 0 1 ]  FAULT
+  Total page faults (FIFO, 3 frames) = 15
+
+--- LRU with 3 frames ---
+  ref 7 : [ 7 - - ]  FAULT
+  ref 0 : [ 7 0 - ]  FAULT
+  ref 1 : [ 7 0 1 ]  FAULT
+  ref 2 : [ 2 0 1 ]  FAULT
+  ref 0 : [ 2 0 1 ]  HIT
+  ref 3 : [ 2 0 3 ]  FAULT
+  ref 0 : [ 2 0 3 ]  HIT
+  ref 4 : [ 4 0 3 ]  FAULT
+  ref 2 : [ 4 0 2 ]  FAULT
+  ref 3 : [ 4 3 2 ]  FAULT
+  ref 0 : [ 0 3 2 ]  FAULT
+  ref 3 : [ 0 3 2 ]  HIT
+  ref 2 : [ 0 3 2 ]  HIT
+  ref 1 : [ 1 3 2 ]  FAULT
+  ref 2 : [ 1 3 2 ]  HIT
+  ref 0 : [ 1 0 2 ]  FAULT
+  ref 1 : [ 1 0 2 ]  HIT
+  ref 7 : [ 1 0 7 ]  FAULT
+  ref 0 : [ 1 0 7 ]  HIT
+  ref 1 : [ 1 0 7 ]  HIT
+  Total page faults (LRU, 3 frames) = 12
+
+--- OPTIMAL with 3 frames ---
+  ref 7 : [ 7 - - ]  FAULT
+  ref 0 : [ 7 0 - ]  FAULT
+  ref 1 : [ 7 0 1 ]  FAULT
+  ref 2 : [ 2 0 1 ]  FAULT
+  ref 0 : [ 2 0 1 ]  HIT
+  ref 3 : [ 2 0 3 ]  FAULT
+  ref 0 : [ 2 0 3 ]  HIT
+  ref 4 : [ 2 4 3 ]  FAULT
+  ref 2 : [ 2 4 3 ]  HIT
+  ref 3 : [ 2 4 3 ]  HIT
+  ref 0 : [ 2 0 3 ]  FAULT
+  ref 3 : [ 2 0 3 ]  HIT
+  ref 2 : [ 2 0 3 ]  HIT
+  ref 1 : [ 2 0 1 ]  FAULT
+  ref 2 : [ 2 0 1 ]  HIT
+  ref 0 : [ 2 0 1 ]  HIT
+  ref 1 : [ 2 0 1 ]  HIT
+  ref 7 : [ 7 0 1 ]  FAULT
+  ref 0 : [ 7 0 1 ]  HIT
+  ref 1 : [ 7 0 1 ]  HIT
+  Total page faults (OPTIMAL, 3 frames) = 9
+
+--- Comparison table ---
+Frames  Algorithm  Faults  Hits  HitRatio       FaultRatio
+  3     FIFO      15     5    25.00%        75.00%
+  3     LRU       12     8    40.00%        60.00%
+  3     OPTIMAL   9     11    55.00%        45.00%
+  4     FIFO      10     10    50.00%        50.00%
+  4     LRU       8     12    60.00%        40.00%
+  4     OPTIMAL   8     12    60.00%        40.00%
+  5     FIFO      9     11    55.00%        45.00%
+  5     LRU       7     13    65.00%        35.00%
+  5     OPTIMAL   7     13    65.00%        35.00%
+
+Conclusion: for this reference string OPTIMAL performs best
+(fewest page faults with 3 frames, and never worse than the others
+at 4 and 5 frames, where LRU matches it). OPTIMAL is the theoretical
+minimum - it looks into the future, so it cannot be implemented in a
+real OS; LRU is the best practical algorithm here, and FIFO is the
+worst of the three for this string.
+$

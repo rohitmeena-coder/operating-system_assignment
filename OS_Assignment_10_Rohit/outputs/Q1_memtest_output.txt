@@ -1,0 +1,37 @@
+$ memtest
+memtest: memory statistics BEFORE allocation
+
+===== Physical Memory Statistics =====
+Total allocated pages       : 425
+Total freed pages           : 214
+Currently allocated pages   : 211
+Available (free) pages      : 56789
+Available physical memory   : 227156 KB
+Total physical memory pages : 57344 (PHYSTOP = 224 MB)
+======================================
+
+memtest: allocated 4 pages (16384 bytes) with sbrk, break 0x3000 -> 0x7000
+
+memtest: memory statistics AFTER allocation
+
+===== Physical Memory Statistics =====
+Total allocated pages       : 429
+Total freed pages           : 214
+Currently allocated pages   : 215
+Available (free) pages      : 56785
+Available physical memory   : 227140 KB
+Total physical memory pages : 57344 (PHYSTOP = 224 MB)
+======================================
+
+memtest: released 4 pages with sbrk
+
+memtest: memory statistics AFTER release
+
+===== Physical Memory Statistics =====
+Total allocated pages       : 429
+Total freed pages           : 218
+Currently allocated pages   : 211
+Available (free) pages      : 56789
+Available physical memory   : 227156 KB
+Total physical memory pages : 57344 (PHYSTOP = 224 MB)
+======================================

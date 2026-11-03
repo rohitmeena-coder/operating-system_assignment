@@ -1,0 +1,10 @@
+$ vttest
+vttest: virtual -> physical address translation
+  heap page (start): va 0x3000 -> pa 0xDEE3000  (frame 57059, offset 0x0)
+  heap page + 100: va 0x3064 -> pa 0xDEE3064  (frame 57059, offset 0x64)
+  heap second page: va 0x4000 -> pa 0xDEE1000  (frame 57057, offset 0x0)
+  global variable: va 0xC4C -> pa 0xDF2CC4C  (frame 57132, offset 0xC4C)
+  main() code: va 0x0 -> pa 0xDF2C000  (frame 57132, offset 0x0)
+  stack (local variable): va 0x2FCC -> pa 0xDF74FCC  (frame 57204, offset 0xFCC)
+  invalid/unmapped address: va 0x10000000 -> NOT MAPPED (vtop returned -1)
+  invalid/unmapped address: va 0x7FFFFFFF -> NOT MAPPED (vtop returned -1)
